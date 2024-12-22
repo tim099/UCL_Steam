@@ -22,6 +22,10 @@ namespace UCL.SteamLib
         public List<PublishedFileId_t> m_SubscribedItems;
         public List<ItemInstallInfo> m_InstallItemsInfo = new List<ItemInstallInfo>();
         public List<string> m_Logs = new List<string>();
+        /// <summary>
+        /// 新訂閱的物品
+        /// </summary>
+        public List<string> m_NewItems = new();
         //[SerializeField] private AppId_t m_AppID;
         public override async UniTask InitAsync(CancellationToken iToken)
         {
@@ -37,14 +41,20 @@ namespace UCL.SteamLib
             Debug.LogWarning($"SteamManager.Initialized name:{name}");
             
             m_SubscribedItems = UCL_SteamUGC.GetSubscribedItems();
+            var installedMods = UCL_SteamUtil.InstalledMods;
+            
             HashSet<ulong> subscribedItems = new ();
-            if (!m_SubscribedItems.IsNullOrEmpty())
+            if (!m_SubscribedItems.IsNullOrEmpty())//有訂閱的模組
             {
                 foreach (var publishedFileID in m_SubscribedItems)
                 {
-                    subscribedItems.Add(publishedFileID.m_PublishedFileId);//紀錄訂閱的物品id
+                    ulong fileId = publishedFileID.m_PublishedFileId;
+                    subscribedItems.Add(fileId);//紀錄訂閱的物品id
                     var item = UCL_SteamUGC.GetItemInstallInfo(publishedFileID);
-                    
+                    if (!installedMods.Contains(fileId))//新訂閱的物品 記錄起來
+                    {
+                        m_NewItems.Add(fileId.ToString());
+                    }
                     if(item.success)
                     {
                         m_InstallItemsInfo.Add(item);
@@ -60,10 +70,10 @@ namespace UCL.SteamLib
 
                 }
             }
-            var installedMods = UCL_SteamUtil.InstalledMods.ToList();//移除取消訂閱的物品 因為會在foreach內修改到原本的Set所以複製一份
+            
             if (!installedMods.IsNullOrEmpty())
             {
-                foreach(var itemId in installedMods)
+                foreach(var itemId in installedMods.ToList())//移除取消訂閱的物品 因為會在foreach內修改到原本的Set所以複製一份
                 {
                     //Debug.LogError($" installedMods itemId:{itemId},subscribedItems:{subscribedItems.ConcatToString()}");
                     if (!subscribedItems.Contains(itemId))//已經取消訂閱
