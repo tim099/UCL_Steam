@@ -12,6 +12,7 @@ using System.Threading;
 using System.IO;
 using UCL.Core;
 using UCL.Core.JsonLib;
+using System.Linq;
 namespace UCL.SteamLib
 {
     public class UCL_SteamworkService : UCL.Core.Game.UCL_GameService
@@ -31,15 +32,17 @@ namespace UCL.SteamLib
                 await UniTask.WaitUntil(() => SteamManager.Initialized, cancellationToken: aToken);
             }
             UCL_SteamAPI.s_OnLog += OnLog;
-
+            
             string name = SteamFriends.GetPersonaName();
             Debug.LogWarning($"SteamManager.Initialized name:{name}");
             
             m_SubscribedItems = UCL_SteamUGC.GetSubscribedItems();
+            HashSet<ulong> subscribedItems = new ();
             if (!m_SubscribedItems.IsNullOrEmpty())
             {
                 foreach (var publishedFileID in m_SubscribedItems)
                 {
+                    subscribedItems.Add(publishedFileID.m_PublishedFileId);//紀錄訂閱的物品id
                     var item = UCL_SteamUGC.GetItemInstallInfo(publishedFileID);
                     
                     if(item.success)
@@ -47,7 +50,7 @@ namespace UCL.SteamLib
                         m_InstallItemsInfo.Add(item);
                         try
                         {
-                            CheckAndInstallModule(item);
+                            CheckAndInstallModule(publishedFileID, item);
                         }
                         catch(System.Exception ex)
                         {
@@ -57,11 +60,28 @@ namespace UCL.SteamLib
 
                 }
             }
+            var installedMods = UCL_SteamUtil.InstalledMods.ToList();//移除取消訂閱的物品 因為會在foreach內修改到原本的Set所以複製一份
+            if (!installedMods.IsNullOrEmpty())
+            {
+                foreach(var itemId in installedMods)
+                {
+                    //Debug.LogError($" installedMods itemId:{itemId},subscribedItems:{subscribedItems.ConcatToString()}");
+                    if (!subscribedItems.Contains(itemId))//已經取消訂閱
+                    {
+                        //Debug.LogError($"itemId:{itemId}, uninstall");//移除模組
+                        UnInstallModule(itemId);
+                    }
+                }
+            }
+        }
+        public override void Save()
+        {
+            base.Save();
         }
         /// <summary>
         /// 從Steam安裝模組
         /// </summary>
-        private void CheckAndInstallModule(ItemInstallInfo item)
+        private void CheckAndInstallModule(PublishedFileId_t publishedFileID, ItemInstallInfo item)
         {
             //string configPath = Path.Combine(item.pchFolder, UCL_ModulePath.ConfigFileName);
             ////Load config
@@ -88,6 +108,8 @@ namespace UCL.SteamLib
             Debug.LogWarning($"itemInstallInfoPath:{itemInstallInfoPath}");
             bool needInstall = false;
             bool directoryExists = Directory.Exists(path);
+
+            UCL_SteamUtil.AddInstalledMod(publishedFileID.m_PublishedFileId);
             if (!directoryExists)//not installed, install
             {
                 needInstall = true;
@@ -134,6 +156,23 @@ namespace UCL.SteamLib
             
             //Install
             //UCL_ModuleService.Ins.
+        }
+        /// <summary>
+        /// 解除安裝Steam模組
+        /// </summary>
+        /// <param name="modID"></param>
+        private void UnInstallModule(ulong moduleID)
+        {
+            string id = moduleID.ToString();
+            var moduleEntry = UCL_ModulePath.PersistantPath.GetModulesEntry(UCL_ModuleEditType.Runtime);
+            string path = moduleEntry.GetModulePath(id);
+            //Debug.LogError($"UnInstallModule:{id},path:{path}");
+
+            UCL_SteamUtil.RemoveInstalledMod(moduleID);
+            if (Directory.Exists(path))
+            {
+                Directory.Delete(path, true);
+            }
         }
         virtual protected void OnDestroy()
         {
