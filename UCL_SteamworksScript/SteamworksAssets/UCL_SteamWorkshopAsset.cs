@@ -30,6 +30,8 @@ namespace UCL.SteamLib
         {
             UCL_SteamConfigAsset = 1,
             UCL_SteamWorkshopAsset,
+            UCL_SteamUserStatAsset,
+            UCL_SteamAchievementAsset,
         }
     }
 
@@ -148,8 +150,18 @@ namespace UCL.SteamLib
             //GUILayout.BeginHorizontal();
             using (var aScope = new GUILayout.VerticalScope("box", GUILayout.ExpandWidth(false)))
             {
-
+                
                 GUILayout.Label($"{UCL_LocalizeManager.Get("Preview")}({ID})", UCL.Core.UI.UCL_GUIStyle.LabelStyle);
+                GUILayout.Label($"{m_Title}", UCL.Core.UI.UCL_GUIStyle.LabelStyle);
+                {
+                    var logo = m_Module.Module.Logo;
+                    if (logo != null)
+                    {
+                        UCL_GUILayout.DrawTextureFixedHeight(logo, UCL_GUIStyle.GetScaledSize(128));
+                        //GUILayout.Box(logo, GUILayout.ExpandWidth(false), GUILayout.Height(UCL_GUIStyle.GetScaledSize(128)));
+                    }
+                }
+                GUILayout.Label($"{m_Description}", UCL.Core.UI.UCL_GUIStyle.LabelStyle);
 
                 if (iIsShowEditButton)
                 {

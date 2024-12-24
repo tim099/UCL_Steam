@@ -278,6 +278,38 @@ namespace UCL.SteamLib
     public static class UCL_SteamUserStats
     {
         /// <summary>
+        /// 從Steam後端擷取使用者統計和成就資料
+        /// </summary>
+        /// <returns></returns>
+        public static async UniTask<(UserStatsReceived_t result, bool bIOFailure)> RequestUserStats()
+        {
+            return await RequestUserStats(SteamUser.GetSteamID());//Get UserStats
+        }
+
+
+        /// <summary>
+        /// 從Steam後端擷取使用者統計和成就資料
+        /// </summary>
+        /// <returns></returns>
+        public static async UniTask<(UserStatsReceived_t result, bool bIOFailure)> RequestUserStats(CSteamID steamIDUser)
+        {
+            UniTaskCompletionSource<(UserStatsReceived_t result, bool bIOFailure)> ucs = new();
+            //建立工作坊物品的CallBack
+            void OnRequestUserStats(UserStatsReceived_t result, bool bIOFailure)
+            {
+                ucs.TrySetResult((result, bIOFailure));
+                UCL_SteamAPI.OnLog($"GetNumberOfCurrentPlayers Result:{result.m_eResult},bIOFailure:{bIOFailure}");
+            }
+            //建立工作坊物品
+            using (var OnSubmitItemUpdateResult = CallResult<UserStatsReceived_t>.Create(OnRequestUserStats))
+            {
+                OnSubmitItemUpdateResult.Set(SteamUserStats.RequestUserStats(steamIDUser));
+
+                return await ucs.Task;
+            }
+        }
+
+        /// <summary>
         /// 當前玩家數量
         /// </summary>
         /// <returns></returns>

@@ -67,11 +67,15 @@ namespace UCL.SteamLib
                             Debug.LogException(ex);
                         }
                     }
+                    else
+                    {
+                        Debug.LogError($"SubscribedItem:{publishedFileID}, !item.success, pchFolder:{item.pchFolder}");
+                    }
 
                 }
             }
             
-            if (!installedMods.IsNullOrEmpty())
+            if (!installedMods.IsNullOrEmpty())//Uninstall unsubscribedItems
             {
                 foreach(var itemId in installedMods.ToList())//移除取消訂閱的物品 因為會在foreach內修改到原本的Set所以複製一份
                 {
@@ -83,6 +87,15 @@ namespace UCL.SteamLib
                     }
                 }
             }
+            UCL_SteamAchievements.Init();
+
+            //Steamworks.UserStatsReceived_t
+            //使用者已登入
+            //UCL_SteamAchievements.RequestStats();
+
+
+            //Steamworks.SteamUserStats.GetAchievement
+            //if
         }
         public override void Save()
         {
