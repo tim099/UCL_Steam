@@ -1,3 +1,7 @@
+﻿
+// RCG_AutoHeader
+// to change the auto header please go to RCG_AutoHeader.cs
+// Create time : 12/25 2024
 // This file is provided under The MIT License as part of Steamworks.NET.
 // Copyright (c) 2013-2022 Riley Labrecque
 // Please see the included LICENSE.txt for additional information.
