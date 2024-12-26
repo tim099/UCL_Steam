@@ -97,6 +97,10 @@ namespace UCL.SteamLib
                 }
                 GUILayout.Label($"ConfigPath:{ConfigPath}", UCL.Core.UI.UCL_GUIStyle.LabelStyle);
 
+                if (GUILayout.Button(UCL_LocalizeManager.Get("SteamAPI Shutdown"), UCL.Core.UI.UCL_GUIStyle.ButtonStyle))
+                {
+                    SteamAPI.Shutdown();
+                }
                 //if (!Application.isPlaying)
                 //{
                 //    GUILayout.Label("!Application.isPlaying", UCL_GUIStyle.LabelStyle);
