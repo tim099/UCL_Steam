@@ -33,6 +33,11 @@ namespace UCL.SteamLib
             UCL_SteamUserStatAsset,
             UCL_SteamAchievementAsset,
         }
+
+        public enum BuildSettingType
+        {
+            UCL_SteamPostBuildSetting = 101,
+        }
     }
 
 

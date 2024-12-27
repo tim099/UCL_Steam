@@ -1,0 +1,22 @@
+{
+    "name": "UCL_SteamworkBuildScripts",
+    "rootNamespace": "",
+    "references": [
+        "UCL_Core",
+        "UCL_Steamworks",
+        "UCL_Build",
+        "UCL_BuildEditor",
+        "UniTask"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

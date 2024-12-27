@@ -1,5 +1,5 @@
 {
-    "name": "NewAssembly",
+    "name": "UCL_Steamworks",
     "rootNamespace": "",
     "references": [
         "UCL_Core",

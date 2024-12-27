@@ -50,7 +50,9 @@ namespace UCL.SteamLib
                 return new AppId_t();
             }
         }
-        public static string ConfigPath => Path.Combine(UCL.Core.FileLib.Lib.GameFolder, "steam_appid.txt");
+        public static string GetConfigPath(string path) => Path.Combine(path, "steam_appid.txt");
+
+        public static string ConfigPath => GetConfigPath(UCL.Core.FileLib.Lib.GameFolder);
         public UCL_SteamConfigAsset()
         {
             ID = "Asset ID";
@@ -58,10 +60,10 @@ namespace UCL.SteamLib
         /// <summary>
         /// 將AppId寫檔到steam_appid.txt
         /// </summary>
-        public void ApplyAppId()
+        public void ApplyAppId(string path)
         {
             //Debug.LogError($"ApplyAppId ConfigPath:{ConfigPath},m_AppId:{m_AppId}");
-            File.WriteAllText(ConfigPath, m_AppId);
+            File.WriteAllText(GetConfigPath(path), m_AppId);
         }
         /// <summary>
         /// Preview(OnGUI)
@@ -93,7 +95,7 @@ namespace UCL.SteamLib
                 
                 if (GUILayout.Button(UCL_LocalizeManager.Get("Apply AppId"), UCL.Core.UI.UCL_GUIStyle.ButtonStyle))
                 {
-                    ApplyAppId();
+                    ApplyAppId(UCL.Core.FileLib.Lib.GameFolder);
                 }
                 GUILayout.Label($"ConfigPath:{ConfigPath}", UCL.Core.UI.UCL_GUIStyle.LabelStyle);
 
