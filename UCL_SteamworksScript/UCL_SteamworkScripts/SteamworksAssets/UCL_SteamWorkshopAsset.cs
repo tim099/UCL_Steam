@@ -37,6 +37,7 @@ namespace UCL.SteamLib
         public enum BuildSettingType
         {
             UCL_SteamPostBuildSetting = 101,
+            UCL_SteamVDFBuildSetting,
         }
     }
 
