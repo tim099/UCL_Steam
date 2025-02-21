@@ -23,9 +23,13 @@ namespace UCL.SteamLib
         public List<ItemInstallInfo> m_InstallItemsInfo = new List<ItemInstallInfo>();
         public List<string> m_Logs = new List<string>();
         /// <summary>
-        /// 新訂閱的物品
+        /// newly subscribed items 新訂閱的物品
         /// </summary>
         public List<string> m_NewItems = new();
+        /// <summary>
+        /// newly install(or update) items 新安裝(或更新)的物品
+        /// </summary>
+        public List<string> m_NewInstallItems = new();
         //[SerializeField] private AppId_t m_AppID;
         public override async UniTask InitAsync(CancellationToken iToken)
         {
@@ -44,23 +48,25 @@ namespace UCL.SteamLib
             var installedMods = UCL_SteamUtil.InstalledMods;
             
             HashSet<ulong> subscribedItems = new ();
-            if (!m_SubscribedItems.IsNullOrEmpty())//有訂閱的模組
+            if (!m_SubscribedItems.IsNullOrEmpty())//Subscription modules 有訂閱的模組
             {
                 foreach (var publishedFileID in m_SubscribedItems)
                 {
                     ulong fileId = publishedFileID.m_PublishedFileId;
-                    subscribedItems.Add(fileId);//紀錄訂閱的物品id
+                    string fileIdStr = fileId.ToString();
+                    subscribedItems.Add(fileId);//Record Subscription Item ID 紀錄訂閱的物品id
                     var item = UCL_SteamUGC.GetItemInstallInfo(publishedFileID);
-                    if (!installedMods.Contains(fileId))//新訂閱的物品 記錄起來
+                    if (!installedMods.Contains(fileId))//Record newly subscribed items 新訂閱的物品 記錄起來
                     {
-                        m_NewItems.Add(fileId.ToString());
+                        m_NewItems.Add(fileIdStr);
                     }
                     if(item.success)
                     {
                         m_InstallItemsInfo.Add(item);
                         try
                         {
-                            CheckAndInstallModule(publishedFileID, item);
+                            bool install = CheckAndInstallModule(publishedFileID, item);
+                            m_NewInstallItems.Add(fileIdStr);
                         }
                         catch(System.Exception ex)
                         {
@@ -104,7 +110,7 @@ namespace UCL.SteamLib
         /// <summary>
         /// 從Steam安裝模組
         /// </summary>
-        private void CheckAndInstallModule(PublishedFileId_t publishedFileID, ItemInstallInfo item)
+        private bool CheckAndInstallModule(PublishedFileId_t publishedFileID, ItemInstallInfo item)
         {
             //string configPath = Path.Combine(item.pchFolder, UCL_ModulePath.ConfigFileName);
             ////Load config
@@ -165,10 +171,12 @@ namespace UCL.SteamLib
 
                 }
             }
+
             if(!needInstall)
             {
-                return;
+                return false;
             }
+            
             if (directoryExists)//Delete Old Version
             {
                 Directory.Delete(path, true);
@@ -176,7 +184,7 @@ namespace UCL.SteamLib
             UCL.Core.FileLib.Lib.CopyDirectory(item.pchFolder, path);
 
             File.WriteAllText(itemInstallInfoPath, item.SerializeToJson().ToJsonBeautify());//Save ItemInstallInfo
-            
+            return true;
             //Install
             //UCL_ModuleService.Ins.
         }
