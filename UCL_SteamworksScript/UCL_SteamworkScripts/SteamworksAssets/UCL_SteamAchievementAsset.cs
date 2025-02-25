@@ -43,7 +43,7 @@ namespace UCL.SteamLib
         /// <summary>
         /// 從Steam同步Stat
         /// </summary>
-        private bool GetStat()
+        public bool GetStat()
         {
             if (!m_Inited)
             {
