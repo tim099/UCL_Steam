@@ -69,12 +69,24 @@ namespace UCL.SteamLib
             if (m_Flag)
             {
                 bool success = SteamUserStats.SetAchievement(ID);
-                Debug.LogError($"SetStat ID:{ID} m_Flag:{m_Flag},success:{success}");
+                if (success)
+                {
+                    bool result = SteamUserStats.StoreStats();//保存成就狀態並觸發彈出通知
+                    if (!result)
+                    {
+                        Debug.LogError($"SteamUserStats.StoreStats ID:{ID} m_Flag:{m_Flag}, fail");
+                    }
+                }
+                if (!success)
+                {
+                    Debug.LogError($"SetStat ID:{ID} m_Flag:{m_Flag},success:{success}");
+                }
+                //Debug.LogError($"SetStat ID:{ID} m_Flag:{m_Flag},success:{success}");
             }
             else//清除成就(測試用 實際應該不會用到)
             {
                 bool success = SteamUserStats.ClearAchievement(ID);
-                Debug.LogError($"SetStat ID:{ID} m_Flag:{m_Flag},success:{success}");
+                //Debug.LogError($"SetStat ID:{ID} m_Flag:{m_Flag},success:{success}");
             }
         }
         /// <summary>
