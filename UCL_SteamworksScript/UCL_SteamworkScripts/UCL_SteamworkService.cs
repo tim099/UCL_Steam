@@ -27,6 +27,10 @@ namespace UCL.SteamLib
         /// </summary>
         public List<string> m_NewItems = new();
         /// <summary>
+        /// Unsubscribed Items 取消訂閱的物品
+        /// </summary>
+        public List<string> m_UnsubscribedItems = new();
+        /// <summary>
         /// newly install(or update) items 新安裝(或更新)的物品
         /// </summary>
         public List<string> m_NewInstallItems = new();
@@ -88,6 +92,7 @@ namespace UCL.SteamLib
                     //Debug.LogError($" installedMods itemId:{itemId},subscribedItems:{subscribedItems.ConcatToString()}");
                     if (!subscribedItems.Contains(itemId))//已經取消訂閱
                     {
+                        m_UnsubscribedItems.Add(itemId.ToString());
                         //Debug.LogError($"itemId:{itemId}, uninstall");//移除模組
                         UnInstallModule(itemId);
                     }
