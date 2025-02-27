@@ -45,12 +45,21 @@ namespace UCL.SteamLib
         /// </summary>
         public bool GetStat()
         {
-            if (!m_Inited)
+            try
             {
-                bool success = SteamUserStats.GetAchievement(ID, out m_Flag);
-                Debug.LogError($"GetStat ID:{ID} m_Flag:{m_Flag},success:{success}");
+                if (!m_Inited)
+                {
+                    bool success = SteamUserStats.GetAchievement(ID, out m_Flag);
+                    Debug.LogError($"GetStat ID:{ID} m_Flag:{m_Flag},success:{success}");
+                }
+                return m_Flag;
             }
-            return m_Flag;
+            catch(System.Exception ex)
+            {
+                Debug.LogException(ex);
+            }
+
+            return false;
         }
         /// <summary>
         /// 設置成就
@@ -65,28 +74,35 @@ namespace UCL.SteamLib
         /// <param name="flag"></param>
         public void SetStat(bool flag)
         {
-            m_Flag = flag;
-            if (m_Flag)
+            try
             {
-                bool success = SteamUserStats.SetAchievement(ID);
-                if (success)
+                m_Flag = flag;
+                if (m_Flag)
                 {
-                    bool result = SteamUserStats.StoreStats();//保存成就狀態並觸發彈出通知
-                    if (!result)
+                    bool success = SteamUserStats.SetAchievement(ID);
+                    if (success)
                     {
-                        Debug.LogError($"SteamUserStats.StoreStats ID:{ID} m_Flag:{m_Flag}, fail");
+                        bool result = SteamUserStats.StoreStats();//保存成就狀態並觸發彈出通知
+                        if (!result)
+                        {
+                            Debug.LogError($"SteamUserStats.StoreStats ID:{ID} m_Flag:{m_Flag}, fail");
+                        }
                     }
+                    if (!success)
+                    {
+                        Debug.LogError($"SetStat ID:{ID} m_Flag:{m_Flag},success:{success}");
+                    }
+                    //Debug.LogError($"SetStat ID:{ID} m_Flag:{m_Flag},success:{success}");
                 }
-                if (!success)
+                else//清除成就(測試用 實際應該不會用到)
                 {
-                    Debug.LogError($"SetStat ID:{ID} m_Flag:{m_Flag},success:{success}");
+                    bool success = SteamUserStats.ClearAchievement(ID);
+                    //Debug.LogError($"SetStat ID:{ID} m_Flag:{m_Flag},success:{success}");
                 }
-                //Debug.LogError($"SetStat ID:{ID} m_Flag:{m_Flag},success:{success}");
             }
-            else//清除成就(測試用 實際應該不會用到)
+            catch (System.Exception ex)
             {
-                bool success = SteamUserStats.ClearAchievement(ID);
-                //Debug.LogError($"SetStat ID:{ID} m_Flag:{m_Flag},success:{success}");
+                Debug.LogException(ex);
             }
         }
         /// <summary>
