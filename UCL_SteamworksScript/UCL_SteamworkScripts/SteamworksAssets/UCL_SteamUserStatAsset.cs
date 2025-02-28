@@ -18,6 +18,8 @@ namespace UCL.SteamLib
     /// <summary>
     /// SteamUserStats相關設定
     /// 需要先在後台的"統計與成就" => "統計" 新增統計中創建對應的ID
+    /// For SteamUserStats settings, you need to first go to the "Stats and Achievements" section in the backend, 
+    /// then select "Stats". From there, create a corresponding ID under Add Stats.
     /// </summary>
     [UCL.Core.ATTR.UCL_GroupIDAttribute(AssetGroup.Steam)]
     [UCL.Core.ATTR.UCL_Sort((int)AssetGroup.EditConfigType.UCL_SteamUserStatAsset)]
@@ -92,7 +94,7 @@ namespace UCL.SteamLib
                 else
                 {
                     m_Inited = true;
-                    Debug.LogError($"{GetType().Name}.GetStateInt(), ID:{ID}, m_Int:{m_Int}");//Test
+                    Debug.Log($"{GetType().Name}.GetStateInt(), ID:{ID}, m_Int:{m_Int}");//Test
                 }
             }
             return m_Int;
@@ -126,6 +128,29 @@ namespace UCL.SteamLib
             if (!success)
             {
                 Debug.LogError($"{GetType().Name}.SetState(), ID:{ID}, val:{val}, m_ValueType:{m_ValueType}, fail");
+            }
+        }
+        public void AlterStat(int val)
+        {
+            try
+            {
+                if (m_ValueType != EValueType.Int)
+                {
+                    Debug.LogError($"{GetType().Name}.SetState(int), ID:{ID}, val:{val}, m_ValueType:{m_ValueType}");
+                    return;
+                }
+                GetStatInt();
+                m_Int += val;
+                Debug.LogWarning($"AlterStat ID:{ID}, m_Int:{m_Int},val:{val}");
+                bool success = SteamUserStats.SetStat(ID, m_Int);
+                if (!success)
+                {
+                    Debug.LogError($"{GetType().Name}.SetState(), ID:{ID}, val:{val}, m_ValueType:{m_ValueType}, fail");
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogException(e);
             }
         }
         public void SetStat(float val)
