@@ -147,6 +147,14 @@ namespace UCL.SteamLib
                 {
                     Debug.LogError($"{GetType().Name}.SetState(), ID:{ID}, val:{val}, m_ValueType:{m_ValueType}, fail");
                 }
+                else
+                {
+                    bool result = SteamUserStats.StoreStats();//保存成就狀態並觸發彈出通知
+                    if (!result)
+                    {
+                        Debug.LogError($"SteamUserStats.StoreStats ID:{ID} result:{result}, fail");
+                    }
+                }
             }
             catch (System.Exception e)
             {
