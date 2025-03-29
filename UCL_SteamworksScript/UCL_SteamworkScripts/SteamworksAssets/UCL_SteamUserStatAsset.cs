@@ -2,6 +2,10 @@
 // RCG_AutoHeader
 // to change the auto header please go to RCG_AutoHeader.cs
 // Create time : 12/24 2024
+
+#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX || UNITY_STANDALONE_LINUX
+
+
 using Cysharp.Threading.Tasks;
 using Steamworks;
 using UCL.Core.JsonLib;
@@ -225,3 +229,6 @@ namespace UCL.SteamLib
 
     }
 }
+
+
+#endif

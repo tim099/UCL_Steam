@@ -2,6 +2,9 @@
 // RCG_AutoHeader
 // to change the auto header please go to RCG_AutoHeader.cs
 // Create time : 02/19 2025
+
+#if UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX || UNITY_STANDALONE_LINUX
+
 using Cysharp.Threading.Tasks;
 using System;
 using System.Collections;
@@ -70,3 +73,5 @@ namespace UCL.SteamLib
 //        "1864831"   "D:\App\steamworks_sdk_157\sdk\tools\ContentBuilder\scripts\depot_1864831.vdf"
 //    }
 //}
+
+#endif
