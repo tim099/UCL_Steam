@@ -64,12 +64,14 @@ namespace UCL.SteamLib
                     string fileIdStr = fileId.ToString();
                     subscribedItems.Add(fileId);//Record Subscription Item ID 紀錄訂閱的物品id
                     var item = UCL_SteamUGC.GetItemInstallInfo(publishedFileID);
-                    if (!installedMods.Contains(fileId))//Record newly subscribed items 新訂閱的物品 記錄起來
-                    {
-                        m_NewItems.Add(fileIdStr);
-                    }
+
                     if(item.success)
                     {
+                        if (!installedMods.Contains(fileId))//Record newly subscribed items 新訂閱的物品 記錄起來
+                        {
+                            m_NewItems.Add(fileIdStr);
+                        }
+
                         m_InstallItemsInfo.Add(item);
                         try
                         {
