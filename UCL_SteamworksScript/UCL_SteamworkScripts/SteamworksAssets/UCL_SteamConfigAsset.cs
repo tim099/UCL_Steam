@@ -31,7 +31,7 @@ namespace UCL.SteamLib
     /// </summary>
     [UCL.Core.ATTR.UCL_GroupIDAttribute(AssetGroup.Steam)]
     [UCL.Core.ATTR.UCL_Sort((int)AssetGroup.EditConfigType.UCL_SteamConfigAsset)]
-    [HelpURL("eov_docs:{lang}/UCL_SteamAssets/UCL_SteamConfigAsset.md")]
+    [HelpURL("ucl_steam:Docs~/{lang}/UCL_SteamAssets/UCL_SteamConfigAsset.md")]
     public class UCL_SteamConfigAsset : UCL_Asset<UCL_SteamConfigAsset>
     {
         /// <summary>

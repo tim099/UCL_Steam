@@ -24,7 +24,7 @@ namespace UCL.SteamLib
     /// </summary>
     [UCL.Core.ATTR.UCL_GroupIDAttribute(AssetGroup.Steam)]
     [UCL.Core.ATTR.UCL_Sort((int)AssetGroup.EditConfigType.UCL_SteamAchievementAsset)]
-    [HelpURL("eov_docs:{lang}/UCL_SteamAssets/UCL_SteamAchievementAsset.md")]
+    [HelpURL("ucl_steam:Docs~/{lang}/UCL_SteamAssets/UCL_SteamAchievementAsset.md")]
     public class UCL_SteamAchievementAsset : UCL_Asset<UCL_SteamAchievementAsset>
     {
         /// <summary>
