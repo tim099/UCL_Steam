@@ -27,6 +27,7 @@ namespace UCL.SteamLib
     /// </summary>
     [UCL.Core.ATTR.UCL_GroupIDAttribute(AssetGroup.Steam)]
     [UCL.Core.ATTR.UCL_Sort((int)AssetGroup.EditConfigType.UCL_SteamUserStatAsset)]
+    [HelpURL("eov_docs:{lang}/UCL_SteamAssets/UCL_SteamUserStatAsset.md")]
     public class UCL_SteamUserStatAsset : UCL_Asset<UCL_SteamUserStatAsset>
     {
         public enum EValueType

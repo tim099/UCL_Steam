@@ -47,6 +47,7 @@ namespace UCL.SteamLib
 
     [UCL.Core.ATTR.UCL_GroupIDAttribute(AssetGroup.Steam)]
     [UCL.Core.ATTR.UCL_Sort((int)AssetGroup.EditConfigType.UCL_SteamWorkshopAsset)]
+    [HelpURL("eov_docs:{lang}/UCL_SteamAssets/UCL_SteamWorkshopAsset.md")]
     public class UCL_SteamWorkshopAsset : UCL_Asset<UCL_SteamWorkshopAsset>
     {
         public enum UploadState
